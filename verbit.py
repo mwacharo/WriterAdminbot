@@ -78,35 +78,65 @@ try:
     top_most_order.click()
     print("Clicked on the top-most order...")
 
+    # opens to new page
+    new_window_handle = browser.window_handles[1]
+    browser.switch_to.window(new_window_handle)
+
     # Wait for the "Request / Bid" button to be clickable
     print("Waiting for the btn-take to be present...")
-    btn_take = WebDriverWait(browser, 40).until(
+    btn_take = WebDriverWait(browser, 30).until(
         EC.presence_of_element_located((By.XPATH, "//*[@id='btn-take']"))
     )
-        # Click on the btn_take
+
+    # Click on the btn_take
     print("Clicking on the  btn_take...")
     btn_take.click()
     print("Clicked on the  btn_take...")
-
-
-
-
-    request_bid_button = WebDriverWait(browser, 60).until(
-         EC.element_to_be_clickable((By.CSS_SELECTOR, '#btn-take'))
+    # //*[@id="form-request-order"]/div[1]/div[2]/textarea
+  
+    # now place bid by copy-pasting custom message and click on place bid
+    bid_form = WebDriverWait(browser, 10).until(
+        EC.presence_of_element_located((By.ID, "form-request-order"))
+    
     )
+    print("bid form found")
+     # Wait for the bidding modal to be present
+    bidding_modal = WebDriverWait(browser, 10).until(
+        EC.presence_of_element_located((By.ID, "modal-bidding-form"))
+    )
+    print("bidding modal is found")
+     # Wait for the "Message" textarea in the bidding modal
+    description_input = WebDriverWait(bidding_modal, 10).until(
+    EC.presence_of_element_located((By.NAME, "description"))
+    )
+     # Clear and input your bid message
+    print("Filling in the bid form with a predefined message...")
+ 
+    # description_input.clear()
+    description_input.send_keys(
+        "I have reviewed the provided instructions and understand the requirements. Rest assured, I am committed to delivering top-notch work, drawing upon my expertise from successfully completing prior tasks. Your project will be approached with the utmost professionalism and dedication to ensure exceptional quality. I am confident that my experience positions me well to meet and exceed your expectations. Kindly consider me."
+    )
+    print("Message filled")
 
+    # Locate and click the "Place bid" button
+    place_bid_button = WebDriverWait(bidding_modal, 10).until(
+        EC.element_to_be_clickable((By.ID, "btn-request"))
+    )
+    place_bid_button.click()
 
+    print("Bid placed successfully!")
+    # write code to go to orders table and  click on top order and place bid  do this for all orders and refresh web page while in orders window after every 2 minutes.
+    # let me provide code of orders table .
    
 
-except TimeoutException as e:
-    print(f"TimeoutException: {e}")
 
 finally:
-        # Wait for 12 hours before closing the browser
+    # Wait for 12 hours before closing the browser
     print("Waiting for 12 hours before closing the browser...")
     time.sleep(12 * 60 * 60)  # 12 hours in seconds
 
     # Quit the browser
     print("Closing the browser...")
     browser.quit()
+    
 
